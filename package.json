@@ -4,6 +4,7 @@
   "description": "Api for RSSchool websocket task",
   "main": "index.js",
   "scripts": {
+    "build": "echo",
     "start": "node ./src/index.js",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
