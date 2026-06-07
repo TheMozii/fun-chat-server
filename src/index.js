@@ -1,13 +1,25 @@
 /* eslint-disable no-unused-vars */
 
 const Socket = require('./socket');
+const ConnectionPool = require('./pool/connection-pool');
+const MessagePool = require('./pool/message-pool');
+const UserPool = require('./pool/user-pool');
 
 let socket = new Socket();
 
-const clearInterval = process.env.CLEAR_INTERVAL * 60 * 60 * 1000;
-if (clearInterval) {
+const clearIntervalHours = Number(process.env.CLEAR_INTERVAL || 24);
+const clearIntervalMs = clearIntervalHours * 60 * 60 * 1000;
+
+function clearServerMemory() {
+  socket.close();
+  ConnectionPool.getInstance().clear();
+  MessagePool.getInstance().clear();
+  UserPool.getInstance().clear();
+  socket = new Socket();
+}
+
+if (clearIntervalMs) {
   setInterval(() => {
-    socket.close();
-    socket = new Socket();
-  }, clearInterval);
+    clearServerMemory();
+  }, clearIntervalMs);
 }

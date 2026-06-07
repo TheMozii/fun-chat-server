@@ -39,6 +39,9 @@ module.exports = class Socket {
     this.#logger.message(`server timezone utc`);
   }
   close() {
+    this.#socket.clients.forEach((client) => {
+      client.close();
+    });
     this.#socket.close();
     if (this.#httpServer !== null) {
       this.#httpServer.close();

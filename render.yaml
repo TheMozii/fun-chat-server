@@ -10,4 +10,4 @@ services:
       - key: LOG
         value: NONE
       - key: CLEAR_INTERVAL
-        value: "0"
+        value: "24"
