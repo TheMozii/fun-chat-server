@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: fun-chat-server
+    runtime: node
+    buildCommand: npm ci
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: LOG
+        value: NONE
+      - key: CLEAR_INTERVAL
+        value: "0"

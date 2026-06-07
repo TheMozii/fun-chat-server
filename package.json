@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "Api for RSSchool websocket task",
   "main": "index.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "echo",
     "start": "node ./src/index.js",

@@ -21,12 +21,21 @@ module.exports = class Socket {
     if (!webSocketServerPort) {
       throw new Error('server port not correct or not available');
     }
-    this.#httpServer = http.createServer();
-    this.#httpServer.listen(webSocketServerPort);
+    this.#httpServer = http.createServer((request, response) => {
+      if (request.url === '/' || request.url === '/healthz') {
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify({ status: 'ok' }));
+        return;
+      }
+
+      response.writeHead(404, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ error: 'not found' }));
+    });
+    this.#httpServer.listen(webSocketServerPort, '0.0.0.0');
     this.#socket = new WebSocket.Server({ server: this.#httpServer });
     this.#socket.on('connection', this.#newConnectionHandler.bind(this));
 
-    this.#logger.message(`server runnig on port ${process.env.SERVER_PORT}`);
+    this.#logger.message(`server running on port ${webSocketServerPort}`);
     this.#logger.message(`server timezone utc`);
   }
   close() {

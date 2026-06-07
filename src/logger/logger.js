@@ -20,7 +20,8 @@ module.exports = class Logger {
    * @param {LogConnection} message
    */
   connection(message) {
-    if (process.env.LOG.toLowerCase() === 'none') {
+    const logMode = this.#getLogMode();
+    if (logMode === 'none') {
       return;
     }
     const type = message.type.toLowerCase() === 'error' ? chalk.red(message.type) : chalk.green(message.type);
@@ -32,7 +33,8 @@ module.exports = class Logger {
    * @param {string} text
    */
   message(text) {
-    if (process.env.LOG.toLowerCase() === 'none') {
+    const logMode = this.#getLogMode();
+    if (logMode === 'none') {
       return;
     }
     console.log(`${this.#getDate()} ${chalk.white(text)}`);
@@ -41,16 +43,17 @@ module.exports = class Logger {
    * @param {LogMessage} message
    */
   log(message) {
-    if (process.env.LOG.toLowerCase() === 'none') {
+    const logMode = this.#getLogMode();
+    if (logMode === 'none') {
       return;
     }
-    if (process.env.LOG.toLowerCase() === 'incoming' && message.header.toLowerCase() !== 'incoming') {
+    if (logMode === 'incoming' && message.header.toLowerCase() !== 'incoming') {
       return;
     }
-    if (process.env.LOG.toLowerCase() === 'outcoming' && message.header.toLowerCase() !== 'outcoming') {
+    if (logMode === 'outcoming' && message.header.toLowerCase() !== 'outcoming') {
       return;
     }
-    if (process.env.LOG.toLowerCase() === 'error' && message.data.type.toLowerCase() !== 'error') {
+    if (logMode === 'error' && message.data.type.toLowerCase() !== 'error') {
       return;
     }
     const type =
@@ -70,5 +73,8 @@ module.exports = class Logger {
   #getDate() {
     const date = new Date();
     return chalk.gray(`[${date.toLocaleString('ru', { timeZone: 'UTC' })}]`);
+  }
+  #getLogMode() {
+    return (process.env.LOG || 'none').toLowerCase();
   }
 };
